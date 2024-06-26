@@ -23,7 +23,7 @@ func route(r *gin.RouterGroup) {
 	// Read Service
 	r.GET("/posts", controllers.IndexPosts)
 	r.GET("/characters", controllers.GetAllCharacters)
-	r.GET("/characters/:id", controllers.GetCharacterSkill)
+	r.GET("/character-skills/:id", controllers.GetCharacterSkill)
 	r.GET("/posts/:id", controllers.ShowPost)
 
 	r.GET("/hello", func(c *gin.Context) {
