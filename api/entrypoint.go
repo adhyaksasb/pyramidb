@@ -1,7 +1,9 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/adhyaksasb/pyramidb/controllers"
 	"github.com/adhyaksasb/pyramidb/initializers"
@@ -23,6 +25,24 @@ func route(r *gin.RouterGroup) {
 	r.GET("/characters", controllers.GetAllCharacters)
 	r.GET("/characters/:id", controllers.GetCharacterSkill)
 	r.GET("/posts/:id", controllers.ShowPost)
+
+	r.GET("/hello", func(c *gin.Context) {
+		name := c.Query("name")
+		if name == "" {
+			c.JSON(400, gin.H{
+				"message": "name not found",
+			})
+		} else {
+			c.JSON(200, gin.H{
+				"data": fmt.Sprintf("Hello %s!", name),
+			})
+		}
+	})
+	r.GET("/env", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": os.Getenv("DB_URL"),
+		})
+	})
 }
 
 func init() {
