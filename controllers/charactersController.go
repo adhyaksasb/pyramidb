@@ -17,10 +17,10 @@ func GetAllCharacters(c *gin.Context) {
 
 	var mergedCharacters []gin.H
 
-	var path model.Path
 	// Decode and store JSON data into the slice
 	for _, character := range characters {
-		initializers.DB.Model(&path).First(&path, character.Path_id)
+		var path model.Path
+		initializers.DB.First(&path, character.Path_id)
 
 		mergedCharacter := gin.H{
 			"ID": character.ID,
