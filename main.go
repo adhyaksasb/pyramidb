@@ -25,6 +25,8 @@ func main() {
 	r.GET("/characters", controllers.GetAllCharacters)
 	r.GET("/character-skills/:id", controllers.GetCharacterSkill)
 	r.GET("/posts/:id", controllers.ShowPost)
+	r.GET("/paths", controllers.GetAllPaths)
+	r.GET("/elements", controllers.GetAllElements)
 
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
