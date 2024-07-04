@@ -12,7 +12,7 @@ import (
 func GetAllCharacters(c *gin.Context) {
 	// Get the posts
 	var characters []model.Character
-	initializers.DB.Find(&characters)
+	initializers.DB.Order("name asc").Find(&characters)
 
 	// Return it
 	c.JSON(200, gin.H{
