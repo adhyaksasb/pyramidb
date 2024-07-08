@@ -21,6 +21,7 @@ func route(r *gin.RouterGroup) {
 	// Read Service
 	r.GET("/posts", controllers.IndexPosts)
 	r.GET("/characters", controllers.GetAllCharacters)
+	r.GET("/characters/:tag", controllers.GetCharacterByTag)
 	r.GET("/character-skills/:id", controllers.GetCharacterSkill)
 	r.GET("/posts/:id", controllers.ShowPost)
 	r.GET("/paths", controllers.GetAllPaths)
