@@ -10,32 +10,28 @@ import (
 )
 
 func GetAllCharacters(c *gin.Context) {
-	// Get the posts
+	// Get the characters with their associated paths in a single query
 	var characters []model.Character
-	initializers.DB.Order("name asc").Find(&characters)
-
+	initializers.DB.Preload("Path").Order("name asc").Find(&characters)
 
 	var mergedCharacters []gin.H
 
 	// Decode and store JSON data into the slice
 	for _, character := range characters {
-		var path model.Path
-		initializers.DB.First(&path, character.Path_id)
-
 		mergedCharacter := gin.H{
-			"ID": character.ID,
-			"Name": character.Name,
-			"Tag": character.Tag,
-			"Rarity": character.Rarity,
-			"Element": character.Element,
-			"Path_name": path.Name,
-			"Max_sp": character.Max_sp,
-			"Taunt": path.Taunt,
-			"Release_version": character.Release_version,
-			"Icon": character.Icon,
-			"Path_icon": path.Icon,
-			"Preview": character.Preview,
-			"Portrait": character.Portrait,
+			"ID":              character.ID,
+			"Name":            character.Name,
+			"Tag":             character.Tag,
+			"Rarity":          character.Rarity,
+			"Element":         character.Element,
+			"Path_name":       character.Path.Name,
+			"Max_sp":          character.MaxSP,
+			"Taunt":           character.Path.Taunt,
+			"Release_version": character.ReleaseVersion,
+			"Icon":            character.Icon,
+			"Path_icon":       character.Path.Icon,
+			"Preview":         character.Preview,
+			"Portrait":        character.Portrait,
 		}
 		mergedCharacters = append(mergedCharacters, mergedCharacter)
 	}
