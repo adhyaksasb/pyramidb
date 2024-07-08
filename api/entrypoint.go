@@ -2,9 +2,11 @@ package api
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/adhyaksasb/pyramidb/controllers"
 	"github.com/adhyaksasb/pyramidb/initializers"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,6 +33,17 @@ func route(r *gin.RouterGroup) {
 func init() {
 	initializers.ConnectToDB()
 	app = gin.New()
+
+	config := cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}
+
+	app.Use(cors.New(config))
 	r := app.Group("/api")
 	route(r)
 }
