@@ -47,7 +47,7 @@ func GetCharacterByTag(c *gin.Context) {
 
 	// Get the characters with their associated paths in a single query
 	var characters []model.Character
-	initializers.DB.Preload("Path").Where("tag = ?", tag).First(&characters)
+	initializers.DB.Preload("Path").Preload("CharacterStat").Where("tag = ?", tag).First(&characters)
 
 	var mergedCharacters []gin.H
 
@@ -59,14 +59,24 @@ func GetCharacterByTag(c *gin.Context) {
 			"Tag":             character.Tag,
 			"Rarity":          character.Rarity,
 			"Element":         character.Element,
-			"Path_name":       character.Path.Name,
 			"Max_sp":          character.MaxSP,
-			"Taunt":           character.Path.Taunt,
 			"Release_version": character.ReleaseVersion,
 			"Icon":            character.Icon,
-			"Path_icon":       character.Path.Icon,
 			"Preview":         character.Preview,
 			"Portrait":        character.Portrait,
+			"Path": gin.H{
+				"Path_name":       character.Path.Name,
+				"Taunt":           character.Path.Taunt,
+				"Path_icon":       character.Path.Icon,
+			},
+			"Status": gin.H{
+				"HP": character.CharacterStat.HP,
+				"ATK": character.CharacterStat.ATK,
+				"DEF": character.CharacterStat.DEF,
+				"SPD": character.CharacterStat.SPD,
+				"Crit_rate": character.CharacterStat.CritRate,
+				"Crit_dmg": character.CharacterStat.CritDmg,
+			},
 		}
 		mergedCharacters = append(mergedCharacters, mergedCharacter)
 	}
@@ -76,6 +86,7 @@ func GetCharacterByTag(c *gin.Context) {
 		"character": mergedCharacters,
 	})
 }
+
 func GetAllPaths(c *gin.Context) {
 	var paths []model.Path
 	initializers.DB.Order("name asc").Find(&paths)
