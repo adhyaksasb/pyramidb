@@ -134,6 +134,7 @@ func GetCharacterSkill(c *gin.Context) {
 			"max_level":    skill.MaxLevel,
 			"type":         skill.Type,
 			"effect":       skill.Effect,
+			"description": skill.Description,
 			"level":        decodedLevels,
 			"icon":         skill.Icon,
 		}
