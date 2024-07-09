@@ -112,36 +112,33 @@ func GetCharacterSkill(c *gin.Context) {
 	var characterSkills []model.CharacterSkill
 	initializers.DB.Where("character_id = ?", id).Find(&characterSkills)
 
-    // Create a new slice to store decoded JSON data
-    var decodedLevels [][]string
-
-	var mergedSkills []gin.H
+	mergedSkills := make([]gin.H, len(characterSkills))
 
     // Decode and store JSON data into the slice
-    for _, skill := range characterSkills {
-        var levelData []string
+    for i, skill := range characterSkills {
 		
-        if err := json.Unmarshal([]byte(skill.Level), &levelData); err != nil {
-            log.Printf("Failed to unmarshal JSON data: %v", err)
-            continue
-        }
-		
-		decodedLevels = append(decodedLevels, levelData)
+        var decodedLevels []string
 
-		mergedSkill := gin.H{
+		// Unmarshal JSON data only if the skill type is not "Technique"
+		if skill.Type != "Technique" {
+			if err := json.Unmarshal([]byte(skill.Level), &decodedLevels); err != nil {
+				log.Printf("Failed to unmarshal JSON data: %v", err)
+				continue
+			}
+		}
+
+		mergedSkills[i] = gin.H{
 			"id":           skill.ID,
 			"character_id": skill.CharacterID,
 			"name":         skill.Name,
-			"max_level": 	skill.MaxLevel,
-			"type": 		skill.Type,
-			"effect": 		skill.Effect,
-			"level": 		decodedLevels,
-			"icon": 		skill.Icon,
+			"max_level":    skill.MaxLevel,
+			"type":         skill.Type,
+			"effect":       skill.Effect,
+			"level":        decodedLevels,
+			"icon":         skill.Icon,
 		}
-		mergedSkills = append(mergedSkills, mergedSkill)
     }
 
-	// Return it
 	c.JSON(200, gin.H{
 		"skills": mergedSkills,
 	})
