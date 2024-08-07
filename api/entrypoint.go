@@ -28,6 +28,7 @@ func route(r *gin.RouterGroup) {
 	r.GET("/posts/:id", controllers.ShowPost)
 	r.GET("/paths", controllers.GetAllPaths)
 	r.GET("/elements", controllers.GetAllElements)
+	r.GET("/achievements", controllers.GetAllAchievements)
 }
 
 func init() {

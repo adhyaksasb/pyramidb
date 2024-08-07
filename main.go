@@ -28,6 +28,7 @@ func main() {
 	r.GET("/posts/:id", controllers.ShowPost)
 	r.GET("/paths", controllers.GetAllPaths)
 	r.GET("/elements", controllers.GetAllElements)
+	r.GET("/achievements", controllers.GetAllAchievements)
 
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
