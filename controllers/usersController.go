@@ -72,7 +72,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Look up the requested user
+	// Look up the user by email
 	var user model.User
 	initializers.DB.First(&user, "email = ?", body.Email)
 
@@ -83,7 +83,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Compare the sent password with the saved user password hash
+	// Compare the password
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -106,22 +106,14 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie(
-		"Authorization",   // Cookie name
-		tokenString,       // Cookie value (JWT token)
-		3600*24*7,         // Expiry (7 days)
-		"/",               // Path
-		"localhost",            // Domain (empty string for localhost)
-		false,      // Secure flag (true for non-localhost)
-		true,              // HttpOnly flag
-	)
-
-	// Send token back in the response
+	// Send the token back in the response body
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Success to login",
+		"token":   tokenString,
+		"exp": time.Now().Add(time.Hour * 24 * 7).Unix(),
 	})
 }
+
 
 
 func Me(c *gin.Context) {
