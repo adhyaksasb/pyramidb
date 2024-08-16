@@ -107,21 +107,19 @@ func Login(c *gin.Context) {
 	}
 
 	// Determine the domain based on the request origin
-	domain := "pyramidb-fe.vercel.app"
-	if c.Request.Host == "localhost:5173" || c.Request.Host == "localhost:3000" {
-		domain = "localhost"
+	domain := ""
+	if c.Request.Host == "pyramidb-fe.vercel.app" {
+		domain = "pyramidb-fe.vercel.app"
 	}
-
-	// Set a secure cookie for the frontend
-	c.SetSameSite(http.SameSiteLaxMode) // Adjust to Strict if needed
+	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie(
-		"Authorization",  // Cookie name
-		tokenString,      // Cookie value (JWT token)
-		3600*24*7,        // Expiry (7 days)
-		"/",              // Path
-		domain,           // Domain (adjusted based on environment)
-		c.Request.Host != "localhost:5173" && c.Request.Host != "localhost:3000", // Secure flag (true for HTTPS only)
-		true,             // HttpOnly flag (true to prevent JavaScript access)
+		"Authorization",   // Cookie name
+		tokenString,       // Cookie value (JWT token)
+		3600*24*7,         // Expiry (7 days)
+		"/",               // Path
+		domain,            // Domain (empty string for localhost)
+		domain != "",      // Secure flag (true for non-localhost)
+		true,              // HttpOnly flag
 	)
 
 	// Send token back in the response
