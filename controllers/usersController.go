@@ -131,8 +131,23 @@ func Login(c *gin.Context) {
 
 func Me(c *gin.Context) {
 	user, _ := c.Get("user");
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Logged In",
-		"user": user,
-	})
+	
+    // Type assertion to access the user struct
+    if userModel, ok := user.(model.User); ok {
+        c.JSON(http.StatusOK, gin.H{
+            "message": "Logged In",
+            "user": gin.H{
+                "ID":        userModel.ID,
+                "Username":  userModel.Username,
+                "Email":     userModel.Email,
+                "StarRailUID": userModel.StarRailUID,
+				"Achievements": userModel.Achievements,
+                // Add other fields you want to include
+            },
+        })
+    } else {
+        c.JSON(http.StatusBadRequest, gin.H{
+            "error": "Failed to retrieve user information",
+        })
+    }
 }
