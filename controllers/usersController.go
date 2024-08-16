@@ -112,8 +112,8 @@ func Login(c *gin.Context) {
 		tokenString,       // Cookie value (JWT token)
 		3600*24*7,         // Expiry (7 days)
 		"/",               // Path
-		"pyramidb-fe.vercel.app",            // Domain (empty string for localhost)
-		true,      // Secure flag (true for non-localhost)
+		"localhost",            // Domain (empty string for localhost)
+		false,      // Secure flag (true for non-localhost)
 		true,              // HttpOnly flag
 	)
 
