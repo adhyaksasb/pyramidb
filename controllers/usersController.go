@@ -111,7 +111,7 @@ func Login(c *gin.Context) {
 	if c.Request.Host == "pyramidb-fe.vercel.app" {
 		domain = "pyramidb-fe.vercel.app"
 	}
-	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetSameSite(http.SameSiteNoneMode)
 	c.SetCookie(
 		"Authorization",   // Cookie name
 		tokenString,       // Cookie value (JWT token)
