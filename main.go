@@ -22,8 +22,8 @@ func main() {
 	r.DELETE("/posts/:id", controllers.DeletePost)
 	r.POST("/register", controllers.Signup)
 	r.POST("/login", controllers.Login)
-	r.GET("/me", middleware.RequireAuth, controllers.Me)
-
+	r.PUT("/user/achievement/:achievementID", middleware.RequireAuth, controllers.AddAchievementToUser)
+	
 	// Read Service
 	r.GET("/posts", controllers.IndexPosts)
 	r.GET("/characters",middleware.RequireAuth, controllers.GetAllCharacters)
@@ -34,6 +34,7 @@ func main() {
 	r.GET("/elements", controllers.GetAllElements)
 	r.GET("/achievements", controllers.GetAllAchievements)
 	r.GET("achievement-series", controllers.GetAllAchievementSeries)
-
+	r.GET("/me", middleware.RequireAuth, controllers.Me)
+	
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
