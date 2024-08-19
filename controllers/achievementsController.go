@@ -67,8 +67,14 @@ func AddAchievementToUser(c *gin.Context) {
 		return
 	}
 
-	// Explode the Achievements string into a slice
-	achievements := strings.Split(userModel.Achievements, ",")
+	// Trim any leading/trailing commas from the Achievements string
+	trimmedAchievements := strings.Trim(userModel.Achievements, ",")
+
+	// Split the Achievements string into a slice if it's not empty
+	var achievements []string
+	if trimmedAchievements != "" {
+		achievements = strings.Split(trimmedAchievements, ",")
+	}
 
 	// Check if the achievement ID exists in the slice
 	index := -1
@@ -88,8 +94,13 @@ func AddAchievementToUser(c *gin.Context) {
 		achievements = append(achievements, achievementID)
 	}
 
-	// Implode the slice back into a comma-separated string
-	userModel.Achievements = strings.Join(achievements, ",")
+	// Join the slice back into a comma-separated string if it's not empty
+	if len(achievements) > 0 {
+		userModel.Achievements = strings.Join(achievements, ",")
+	} else {
+		userModel.Achievements = ""
+	}
+
 
 	// Update the user's achievements in the database
 	if err := initializers.DB.Model(&userModel).Update("Achievements", userModel.Achievements).Error; err != nil {
